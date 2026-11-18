@@ -29,6 +29,7 @@
   		</div>
   	</nav>
   	<main class="container"></main>
+    <script src="assets/bodyscript.js"></script>
   	<script>
       Swal.fire({
         html:`<div class="mt-2 text-muted">Memuat <strong>Rekap</strong>, mohon tunggu.</div>`,
@@ -37,7 +38,8 @@
       });
       fetch(`${gasUrl}?action=rekap`).then(res => res.json()).then(res => {
   			Swal.close();
-  			document.querySelector('main').textContent = JSON.stringify(res);
+  			//document.querySelector('main').textContent = JSON.stringify(res);
+        console.log(prosesRekap(res));
       }).catch(err => {
   			Swal.fire({icon:'error', title:'Gagal Memuat Data', text:error.message});
   		});
