@@ -28,9 +28,104 @@
   			<div class="collapse navbar-collapse" id="navbarCollapse"> <ul class="navbar-nav me-auto mb-2 mb-md-0"> <li class="nav-item"> <a class="nav-link active" aria-current="page" href="#">Home</a> </li> <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li> <li class="nav-item"> <a class="nav-link disabled" aria-disabled="true">Disabled</a> </li> </ul> <form class="d-flex" role="search"> <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> <button class="btn btn-outline-success" type="submit">Search</button> </form> </div>
   		</div>
   	</nav>
-  	<main class="container"></main>
+  	<main class="container">
+      <h4 class="d-flex flex-wrap gap-2 text-dark mb-4">
+        <i class="bi bi-database-check me-2"></i>Rekap Kas
+      </h4>
+      <div class="card p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center text-light pb-2 mb-4 p-3 rounded-3 shadow-sm" id="saldoContainer" style="cursor:default;">
+          <div>
+            <h5 class="fw-semibold mb-0">Total Kas Tersedia</h5>
+            <small>Akumulasi seluruh kas yang ada</small>
+          </div>
+          <h4 class="fw-bold mb-0 fs-3" id="totalSaldo"></h4>
+        </div>
+        <div class="row" id="kasContainer"></div>
+      </div>
+      <div class="card mb-4">
+        <div class="card-body p-0">
+          <div class="mb-4" id="tbl-iuran"></div>
+          <div class="row align-items-center px-2 mb-4">
+            <div class="col-auto">
+              <div style="font-size: 11px;">
+                <ul class="list-unstyled mb-0">
+                  <li class="d-flex align-items-center mb-2">
+                    <i class="bi bi-star-fill text-warning me-2"></i> Tagihan bulanan akan tampil mulai tanggal 10
+                  </li>
+                  <li class="d-flex align-items-center mb-2">
+                    <i class="bi bi-star-fill text-warning me-2"></i> Jimpitan sebesar Rp 2.000,- / hari
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
     <script src="assets/bodyscript.js"></script>
   	<script>
+      function renderRekap(res) {
+        // proses card saldo
+        const fragment = document.createDocumentFragment();
+        const kasKontainer = document.getElementById('kasContainer');
+        const StatusMap = {
+          Aktif: { cls: 'bg-primary-subtle text-primary', prefix: 'aktif' },
+          Arsip: { cls: 'bg-secondary-subtle text-secondary', prefix: 'arsip' }
+        };
+        let totSaldo = 0;  
+        for (const item of res.cardKas) {
+          totSaldo += Number(item.Saldo);
+          const Cfg = StatusMap[item.Status];
+          let id = Cfg ? `${Cfg.prefix}-${item.Kas.replace(/[^a-zA-Z0-9]/g, '')}` : '';
+          let cls = Cfg ? Cfg.cls : 'bg-danger-subtle text-danger';
+          const container = document.createElement('div');
+          container.className = 'col-12 col-sm-6 col-md-4 col-lg-3 mb-3';
+          container.innerHTML = `
+          <div class="card text-light p-3 shadow-sm" id=${id}>
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+              <span><i class="bi bi-tag-fill text-warning"></i>&nbsp; ${item.Kas === "Tabungan Kegiatan" ? "Tab. Kegiatan" : item.Kas}</span>
+              <span class="badge small ${cls}">${item.Status}</span>
+            </div>
+            <h5 class="text-end fs-5 m-0">${formatRupiah(item.Saldo)}</h5>
+          </div>`;
+          fragment.append(container);
+        }
+        kasKontainer.append(fragment);
+        document.getElementById('totalSaldo').textContent = formatRupiah(totSaldo);
+      
+        // proses tabel iuran
+        let definisiKolom = [];
+        let tempGroups = {};
+        res.tblIuran.headers.forEach(h => {
+          // jika kolom tunggal (No. atau Nama)
+          if (h.main === '') {
+            if (h.sub === 'No.') {
+              definisiKolom.push({title:h.sub, field:h.field, headerSort:false, width:30, hozAlign:'right', frozen:true});
+            } else if (h.sub === 'Nama') {
+              definisiKolom.push({title:h.sub, field:h.field, headerSort:false, minWidth:80, widthGrow:1, hozAlign:'left', frozen:true});
+            } else {
+              definisiKolom.push({title:h.sub, field:h.field, headerSort:false, width:190, hozAlign:'left', frozen:false});
+            }
+          } else { // jika kolom bertingkat (Kekurangan, Agu 2026, Sep 2026, dst)
+            if (!tempGroups[h.main]) {
+              tempGroups[h.main] = {title:h.main, columns:[]};
+              definisiKolom.push(tempGroups[h.main]);
+            }
+            tempGroups[h.main].columns.push({
+              title:h.sub, field:h.field, hozAlign:'right', headerSort:false,
+              //print:h.main === 'Total Kekurangan', htmlOutput:h.main === 'Total Kekurangan',
+              width: h.sub === 'Bulanan' || h.sub === 'Jumlah' ? 80 : 110,
+              minWidth: h.sub === 'Bulanan' || h.sub === 'Jumlah' ? 80 : 110,
+              maxWidth: h.sub === 'Bulanan' || h.sub === 'Jumlah' ? 80 : 110,
+              formatter:formatWarnaTagihan, formatterParams: {main:h.main, sub:h.sub}
+            });
+          }
+        });
+      
+        allTbl.tblIuran.setColumns(definisiKolom);
+        allTbl.tblIuran.setData(res.tblIuran.data);
+      }
+      
       Swal.fire({
         html:`<div class="mt-2 text-muted">Memuat <strong>Rekap</strong>, mohon tunggu.</div>`,
         allowOutsideClick:false, allowEscapeKey:false, focusConfirm:false, showConfirmButton:false,
@@ -39,7 +134,7 @@
       fetch(`${gasUrl}?action=rekap`).then(res => res.json()).then(res => {
   			Swal.close();
         if (res.status === 'success') {
-          console.log(prosesRekap(res.data));
+          renderRekap(prosesRekap(res.data));
         } else {Swal.fire({icon:'warning', title:res.status, text:res.message})}
       }).catch(err => {
   			Swal.fire({icon:'error', title:'Gagal Memuat Data', text:err.message});
