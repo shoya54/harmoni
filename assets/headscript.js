@@ -1,3 +1,6 @@
+Tabulator.extendModule('localize', 'langs', {en: {pagination: {
+  next: '>', prev: '<', first: '<<', last: '>>'
+}}});
 const Notif = Swal.mixin({
   toast:true, position:'top-end', showConfirmButton:false, timer:2000, timerProgressBar:true,
   didOpen: (t) => { t.onmouseenter = Swal.stopTimer; t.onmouseleave = Swal.resumeTimer; }
