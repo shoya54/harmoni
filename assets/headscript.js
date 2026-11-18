@@ -7,6 +7,10 @@ const DaftarBulanMin = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','O
 const DaftarHari = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 const DaftarHariMin = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 const FormatBulanTahun = new Intl.DateTimeFormat('id-ID', {month:'long', year:'numeric'});
+const MasterKas = {
+  aktif: {Bulanan:[], Sukarela:[], Kursi:[], Jimpitan:[]},
+  arsip: { '17an (2025)':[], 'Saparan (2025)':[], 'Tabungan Kegiatan':[], Endapan:[]}
+};
 const gasUrl = 'https://script.google.com/macros/s/AKfycbyoT6ogogKz5ShiImTx9rGHCNCDisl6gAiGRPFbv5KI57_5Eh7b_oZ2LpGY-1E3JzAhaQ/exec';
 var allTbl = {tblIuran:null, tblLapIn:null, tblLapOut:null, tblJimpitan:null};
 
