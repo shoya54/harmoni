@@ -27,9 +27,24 @@
 	</nav>
 	<main class="container"></main>
 	<script>
-    fetch(`${gasUrl}?action=rekap`).then(res => res.json()).then(res => {
-			document.querySelector('main').innerHTML = res;
+    Swal.fire({
+      title: 'Memuat Data...',
+      text: 'Mohon tunggu sebentar',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
     });
+    fetch(`${gasUrl}?action=rekap`).then(res => res.json()).then(res => {
+			Swal.close();
+			document.querySelector('main').innerHTML = res;
+    }).catch(err => {
+			Swal.fire({
+				icon: 'error',
+				title: 'Gagal Memuat Data',
+				text: error.message
+			});
+		});
   </script>
 </body>
 </html>
