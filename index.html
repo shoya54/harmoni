@@ -92,5 +92,13 @@ body {
       <span class="text-body-secondary">Perum Harmoni @Gondangsari, Tegalrejo Salatiga</span>
     </div>
   </footer>
+  <script>
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbyoT6ogogKz5ShiImTx9rGHCNCDisl6gAiGRPFbv5KI57_5Eh7b_oZ2LpGY-1E3JzAhaQ/exec';
+    fetch(`${scriptURL}?action=getProduk`)
+    .then(res => res.json())
+    .then(data => {
+      console.log("Data Produk:", data);
+    });
+  </script>
 </body>
 </html>
