@@ -1,0 +1,74 @@
+<link href="https://googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.2/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.25/dist/sweetalert2.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.5.0/dist/css/tabulator.min.css" rel="stylesheet">
+
+<style>
+body { 
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.nav-link-menu {
+  border: 1px solid transparent !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease-in-out !important;
+  padding: 6px 16px !important;
+}
+.nav-link-menu:hover {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffc107 !important;
+}
+.nav-link-menu.text-white {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  font-weight: 500 !important;
+}
+
+#saldoContainer, [id^="saldo"] { background: linear-gradient(45deg, #6f42c1, #e83e8c); border: none; }
+[id^="aktif-"] { background:linear-gradient(315deg, #0a1f13, #123624, #1d5237); border: none; }
+[id^="arsip-"] { background:linear-gradient(135deg, #0f2027, #203a43, #2c5364); border: none; }
+.card[id^="aktif-"], .card[id^="arsip-"] { transition: transform 0.2s; cursor: default; }
+.card[id^="aktif-"]:hover, .card[id^="arsip-"]:hover { transform: translateY(-5px); }
+
+/* Memindahkan ikon panah ke kiri dan memberi jarak dengan teks */
+.accordion-button::after { margin-left: 0; margin-right: 0.75rem; order: -1; filter: invert(1) brightness(2) !important; }
+/* Menghilangkan efek glow/bayangan biru saat tombol di-focus/diklik */
+.accordion-button:focus { box-shadow: none; border-color: rgba(0, 0, 0, 0.125); }
+
+.tabulator {
+  font-size: 12px !important;
+  background-color: #fff !important;
+  border: 0px !important;
+}
+.tabulator#tbl-iuran { border-radius: 0.375rem !important; }
+
+.tabulator .tabulator-header .tabulator-col {
+  background: linear-gradient(135deg, #3A0B11 0%, #080102 100%) !important;
+  color: rgba(var(--bs-light-rgb),1)!important;
+}
+.tabulator .tabulator-footer {
+  background-color: #fff !important;
+}
+.tabulator-footer .tabulator-paginator .tabulator-page.active {
+  color: var(--bs-light) !important; background-color: var(--bs-primary) !important;
+}
+.tabulator-cell { white-space: nowrap !important; }
+.tabulator-cell .bi { line-height: 1; vertical-align: middle; }
+.tabulator-row.tabulator-group { background: #cfe2ff !important; }
+.tabulator-row.tabulator-group span { color: #0d6efd !important; }
+.tabulator-row.tabulator-group .tabulator-arrow { border-left: 6px solid #0d6efd !important; }
+.tabulator-row.tabulator-group.tabulator-group-visible .tabulator-arrow { border-left: 6px solid transparent !important; border-top: 6px solid #0d6efd !important; }
+.tabulator-row:hover { background-color: #fff3cd !important; }
+#trans-aktif .tabulator-headers [role="columnheader"] { background: linear-gradient(315deg, #0a1f13, #123624, #1d5237) !important; }
+#trans-arsip .tabulator-headers [role="columnheader"] { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364) !important; }
+.tabulator-calcs-holder { display: none !important; }
+.card-body.show-total .tabulator-calcs-holder { display: inline-block !important; }
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact; // Untuk Chrome, Safari, Edge
+    print-color-adjust: exact; // Standar modern (Firefox, dll)
+  }
+}
+</style>
