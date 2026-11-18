@@ -38,8 +38,9 @@
       });
       fetch(`${gasUrl}?action=rekap`).then(res => res.json()).then(res => {
   			Swal.close();
-  			//document.querySelector('main').textContent = JSON.stringify(res);
-        console.log(res);
+        if (res.status === 'success') {
+          console.log(prosesRekap(res.data));
+        } else {Swal.fire({icon:'warning', title:res.status, text:res.message})}
       }).catch(err => {
   			Swal.fire({icon:'error', title:'Gagal Memuat Data', text:err.message});
   		});
