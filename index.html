@@ -65,9 +65,8 @@
     <script src="assets/bodyscript.js"></script>
   	<script>
       allTbl.tblIuran = new Tabulator('#tbl-iuran', {
-        data:[], layout:'fitColumns', movableColumns:false, columnDefaults:{resizable:false},
-        nestedFieldSeparator:false, columnHeaderVertAlign:'middle',
-        columnDefaults: {headerHozAlign:'center'}, printAsHtml:true, printStyled:true,
+        data:[], layout:'fitColumns', movableColumns:false, nestedFieldSeparator:false, columnHeaderVertAlign:'middle',
+        columnDefaults: {resizable:false, headerHozAlign:'center'}, printAsHtml:true, printStyled:true,
       });
       function renderRekap(res) {
         // proses card saldo
@@ -95,6 +94,7 @@
           </div>`;
           fragment.append(container);
         }
+        kasKontainer.innerHTML = '';
         kasKontainer.append(fragment);
         document.getElementById('totalSaldo').textContent = formatRupiah(totSaldo);
       
@@ -137,9 +137,10 @@
         didOpen:()=>{Swal.showLoading()}
       });
       fetch(`${gasUrl}?action=rekap`).then(res => res.json()).then(res => {
-  			Swal.close();
         if (res.status === 'success') {
-          renderRekap(prosesRekap(res.data));
+          const dataRender = prosesRekap(res.data);
+          renderRekap(dataRender);
+          Swal.close();
         } else {Swal.fire({icon:'warning', title:res.status, text:res.message})}
       }).catch(err => {
   			Swal.fire({icon:'error', title:'Gagal Memuat Data', text:err.message});
