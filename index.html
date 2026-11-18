@@ -64,6 +64,11 @@
     </main>
     <script src="assets/bodyscript.js"></script>
   	<script>
+      allTbl.tblIuran = new Tabulator('#tbl-iuran', {
+        data:[], layout:'fitColumns', movableColumns:false, columnDefaults:{resizable:false},
+        nestedFieldSeparator:false, columnHeaderVertAlign:'middle',
+        columnDefaults: {headerHozAlign:'center'}, printAsHtml:true, printStyled:true,
+      });
       function renderRekap(res) {
         // proses card saldo
         const fragment = document.createDocumentFragment();
