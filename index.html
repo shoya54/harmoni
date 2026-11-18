@@ -41,7 +41,7 @@
   			//document.querySelector('main').textContent = JSON.stringify(res);
         console.log(prosesRekap(res));
       }).catch(err => {
-  			Swal.fire({icon:'error', title:'Gagal Memuat Data', text:error.message});
+  			Swal.fire({icon:'error', title:'Gagal Memuat Data', text:err.message});
   		});
     </script>
   </body>
