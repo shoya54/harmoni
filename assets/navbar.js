@@ -28,4 +28,5 @@
       </div>
     </nav>
   `;
+  document.body.insertAdjacentHTML('afterbegin', navHTML);
 }) ();
