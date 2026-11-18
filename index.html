@@ -1,50 +1,43 @@
 <!doctype html>
 <html>
-<head>
-<base target="_self">
-<title>Kas Harmoni</title>
-<link rel="icon" type="image/png" href="dompet.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.2/font/bootstrap-icons.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.25/dist/sweetalert2.min.css" rel="stylesheet">
-<link href="assets/style.css" rel="stylesheet">
-<script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js'></script>
-<script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.5.0/dist/js/tabulator.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/ua-parser-js@2.0.10/dist/ua-parser.pack.min.js"></script>
-<script src="assets/headscript.js"></script>
-</head>
-<body style="padding-top: 4.5rem;">
-	<nav class="navbar navbar-expand-md fixed-top bg-dark" data-bs-theme="dark">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="#">Fixed navbar</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
-			<div class="collapse navbar-collapse" id="navbarCollapse"> <ul class="navbar-nav me-auto mb-2 mb-md-0"> <li class="nav-item"> <a class="nav-link active" aria-current="page" href="#">Home</a> </li> <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li> <li class="nav-item"> <a class="nav-link disabled" aria-disabled="true">Disabled</a> </li> </ul> <form class="d-flex" role="search"> <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> <button class="btn btn-outline-success" type="submit">Search</button> </form> </div>
-		</div>
-	</nav>
-	<main class="container"></main>
-	<script>
-    Swal.fire({
-      title: 'Memuat Data...',
-      text: 'Mohon tunggu sebentar',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
-    fetch(`${gasUrl}?action=rekap`).then(res => res.json()).then(res => {
-			Swal.close();
-			document.querySelector('main').innerHTML = res;
-    }).catch(err => {
-			Swal.fire({
-				icon: 'error',
-				title: 'Gagal Memuat Data',
-				text: error.message
-			});
-		});
-  </script>
-</body>
+  <head>
+    <base target="_self">
+    <title>Kas Harmoni</title>
+    <link rel="icon" type="image/png" href="dompet.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.25/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="assets/style.css" rel="stylesheet">
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.5.0/dist/js/tabulator.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ua-parser-js@2.0.10/dist/ua-parser.pack.min.js"></script>
+    <script src="assets/headscript.js"></script>
+  </head>
+  <body style="padding-top: 4.5rem;">
+  	<nav class="navbar navbar-expand-md fixed-top bg-dark" data-bs-theme="dark">
+  		<div class="container-fluid">
+  			<a class="navbar-brand" href="#">Kas Harmoni</a>
+  			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+  			<div class="collapse navbar-collapse" id="navbarCollapse"> <ul class="navbar-nav me-auto mb-2 mb-md-0"> <li class="nav-item"> <a class="nav-link active" aria-current="page" href="#">Home</a> </li> <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li> <li class="nav-item"> <a class="nav-link disabled" aria-disabled="true">Disabled</a> </li> </ul> <form class="d-flex" role="search"> <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> <button class="btn btn-outline-success" type="submit">Search</button> </form> </div>
+  		</div>
+  	</nav>
+  	<main class="container"></main>
+  	<script>
+      Swal.fire({
+        html:`<div class="mt-2 text-muted">Memuat <strong>Rekap</strong>, mohon tunggu.</div>`,
+        allowOutsideClick:false, allowEscapeKey:false, focusConfirm:false, showConfirmButton:false,
+        didOpen:()=>{Swal.showLoading()}
+      });
+      fetch(`${gasUrl}?action=rekap`).then(res => res.json()).then(res => {
+  			Swal.close();
+  			document.querySelector('main').textContent = JSON.stringify(res);
+      }).catch(err => {
+  			Swal.fire({icon:'error', title:'Gagal Memuat Data', text:error.message});
+  		});
+    </script>
+  </body>
 </html>
