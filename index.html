@@ -19,16 +19,33 @@
     <script src="assets/headscript.js"></script>
   </head>
   <body style="padding-top: 4.5rem;">
-  	<nav class="navbar navbar-expand-md fixed-top bg-dark" data-bs-theme="dark">
-  		<div class="container-fluid">
-  			<a class="navbar-brand" href="#">
-          <img src="dompet-bgwhite.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark shadow p-0 mb-3">
+      <div class="container-fluid px-4">
+        <div class="navbar-brand d-flex align-items-center gap-2 fw-bold text-light" style="cursor:pointer;">
+          <a class="navbar-brand m-0" href="#">
+            <img src="dompet-bgwhite.png" alt="Logo" width="30">
+          </a>
           Kas Harmoni
-        </a>
-  			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
-  			<div class="collapse navbar-collapse" id="navbarCollapse"> <ul class="navbar-nav me-auto mb-2 mb-md-0"> <li class="nav-item"> <a class="nav-link active" aria-current="page" href="#">Home</a> </li> <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li> <li class="nav-item"> <a class="nav-link disabled" aria-disabled="true">Disabled</a> </li> </ul> <form class="d-flex" role="search"> <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> <button class="btn btn-outline-success" type="submit">Search</button> </form> </div>
-  		</div>
-  	</nav>
+        </div>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto gap-2">
+            <li class="nav-item">
+              <a class="nav-link nav-link-menu text-white" href="#">Rekap</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-link-menu" href="#">Transaksi</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-link-menu" href="#">Jimpitan</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
   	<main class="container">
       <h4 class="d-flex flex-wrap gap-2 text-dark mb-4">
         <i class="bi bi-database-check me-2"></i>Rekap Kas
@@ -63,6 +80,7 @@
         </div>
       </div>
     </main>
+    
     <script src="assets/bodyscript.js"></script>
   	<script>
       allTbl.tblIuran = new Tabulator('#tbl-iuran', {
