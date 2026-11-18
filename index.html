@@ -39,7 +39,7 @@
       fetch(`${gasUrl}?action=rekap`).then(res => res.json()).then(res => {
   			Swal.close();
   			//document.querySelector('main').textContent = JSON.stringify(res);
-        console.log(prosesRekap(res));
+        console.log(res);
       }).catch(err => {
   			Swal.fire({icon:'error', title:'Gagal Memuat Data', text:err.message});
   		});
