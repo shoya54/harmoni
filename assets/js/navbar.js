@@ -5,7 +5,7 @@
   const isLoggedIn = true; // Boolean(sesiAdmin && sesiAdmin.username);
   const menuAdmin = isLoggedIn ? 
     `<li class="nav-item">
-      <a class="nav-link ${currentPage === 'settings.html' ? 'nav-link-menu text-white' : ''} " href="settings.html">Jimpitan</a>
+      <a class="nav-link ${currentPage === 'settings.html' ? 'nav-link-menu text-white' : ''} " href="settings.html">Settings</a>
     </li>` : '';
   
   const navHTML = `
