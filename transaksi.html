@@ -20,6 +20,22 @@
     <script src="assets/headscript.js"></script>
   </head>
   <body>
+    <!-- Modal Bootstrap untuk Google Drive -->
+    <div class="modal fade" id="modalBerkas" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="titleBerkas">Pratinjau</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-0" style="height: 75vh;"> <!-- Mengurangi padding agar iframe penuh -->
+            <!-- iframe ini yang akan memuat dokumen Google Drive -->
+            <iframe id="modalFrame" src="" width="100%" height="100%" style="border: none;" allow="autoplay" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <script src="assets/navbar.js"></script>
     
     <main id="konten-utama" class="container-fluid px-4" style="margin-top: 4.5rem;">
