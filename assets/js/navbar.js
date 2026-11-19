@@ -5,7 +5,7 @@
       <div class="container-fluid px-4">
         <div class="navbar-brand d-flex align-items-center gap-2 fw-bold text-light" style="cursor:pointer;">
           <a class="navbar-brand m-0" href="#">
-            <img src="dompet-bgwhite.png" alt="Logo" width="30">
+            <img src="assets/images/dompet-bgwhite.png" alt="Logo" width="30">
           </a>
           Kas Harmoni
         </div>
