@@ -50,9 +50,98 @@
     <script src="assets/jimpitan.js"></script>
     <script src="assets/bodyscript.js"></script>
   	<script>
-      // allTbl.tblLapIn = new Tabulator
+      allTbl.tblJimpitan = new Tabulator('#tbl-jimpitan', {
+        data:[], height:'720px', layout:'fitDataFill', movableColumns:false, columnDefaults:{resizable:false},
+        groupBy:function(data) {
+          // 01-05-2026
+          if (data.Tanggal && data.Tanggal.includes('-')) {
+            let tgl = data.Tanggal.split('-');
+            return `${DaftarBulan[parseInt(tgl[1],10)-1]} ${tgl[2]}`;
+          }
+          return 'Lainnya';
+        },
+        groupHeader:(val,count) => `<span>🗓️ ${val}</span><span style="font-size: 10px;">(${count} hari)</span>`
+      });
+      allTbl.tblJimpitan.on('renderComplete', () => {
+        let kolomAktif = allTbl.tblJimpitan.getColumns()
+        .filter(c => c.isVisible() && c.getDefinition().title !== 'Tanggal')
+        .map(c => c.getField());
+    
+        let totalKosong = 0;
+        allTbl.tblJimpitan.getData('active').forEach(row => {
+          kolomAktif.forEach(field => {
+            let nilaiCell = row[field];
+            if (nilaiCell === '⚠️') totalKosong++;
+          });
+        });
+        document.getElementById('jimpitanKosong').textContent = totalKosong;
+      });
       
-      function renderJimpitan(res) {}
+      function renderJimpitan(res) {
+        let colDef = res.headers.map(function(col) {
+          let config = {title:col, field:col, headerSort:false, hozAlign:'center'};
+          if (col === 'Tanggal') {
+            Object.assign(config, {frozen:true, hozAlign:'left'});
+            // tambahkan nama hari
+            config.formatter = function(cell) {
+              let val = cell.getValue(); // 01-05-2026
+              if (val && val.includes('-')) {
+                let tgl = val.split('-');
+                let objDate = new Date(tgl[2], parseInt(tgl[1],10)-1, tgl[0]);
+                let namaHari = DaftarHariMin[objDate.getDay()];
+                return `${namaHari}, ${val}`;
+              }
+              return val;
+            };
+          }
+          return config;
+        });
+      
+        allTbl.tblJimpitan.setColumns(colDef);
+        allTbl.tblJimpitan.setData(res.data.reverse())
+        .then(() => Notif.fire({icon:'success', text:'Berhasil mengambil data.'}))
+        .catch((err) => Notif.fire({icon:'error', text:err}));
+      
+        // generate menu di checkbox warga
+        const fragment = document.createDocumentFragment();
+        const listChkJimpitan = document.getElementById('daftar-checkbox-kolom');
+        listChkJimpitan.innerHTML = ''; 
+      
+        allTbl.tblJimpitan.getColumns().forEach(function(col) {
+          let colName = col.getDefinition().title;
+          if (colName === 'Tanggal') return; // kolom Tanggal wajib tampil
+          let chk = document.createElement('input');
+          Object.assign(chk, {type:'checkbox', checked:col.isVisible()});
+          chk.style.marginRight = '8px';
+          chk.addEventListener('change', () => {
+            col.toggle();
+            allTbl.tblJimpitan.redraw(true);
+          });
+      
+          let lbl = document.createElement('label');
+          Object.assign(lbl.style, {display:'block', margin:'5px 0', cursor:'pointer'});
+          lbl.append(chk, colName);
+          fragment.append(lbl);
+        });
+        listChkJimpitan.append(fragment);
+      
+        const btnBerkasJimpitan = document.getElementById('btn-berkas-jimpitan');
+        btnBerkasJimpitan.innerHTML = '';
+        res.embed.forEach(function(url,idx) {
+          const lbl = `Formulir ${idx+2026}`;
+          let btn = document.createElement('button');
+          btn.className = 'btn btn-sm btn-outline-primary';
+          btn.type = 'button';
+          btn.title = 'Lihat Berkas';
+          btn.textContent = lbl;
+          btn.dataset.bsToggle = 'modal';
+          btn.dataset.bsTarget = '#modalBerkas';
+          btn.dataset.id = url;
+          btn.dataset.txt = lbl;
+          fragment.append(btn);
+        });
+        btnBerkasJimpitan.append(fragment);
+      }
       
       Swal.fire({
         html:`<div class="mt-2 text-muted">Memuat <strong>Jimpitan</strong>, mohon tunggu.</div>`,
