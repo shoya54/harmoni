@@ -100,3 +100,38 @@ function prosesDataPengeluaran(pengeluaran,targetKategori) {
   }
   return listHasil;
 }
+
+window.addEventListener('DOMContentLoaded', function() {      
+  const kontenUtama = document.querySelector('main#konten-utama');
+  kontenUtama.addEventListener('change', function(e) {
+    // Cek apakah yang diubah adalah switch dengan class 'toggle-calcs'
+    if (e.target && e.target.classList.contains('toggle-calcs')) {
+      const cardBody = e.target.closest('.card-body');
+      if (cardBody) {
+        cardBody.classList.toggle('show-total', e.target.checked);
+      }
+    }
+  });
+
+  const modalBerkas = document.getElementById('modalBerkas');
+  if (modalBerkas) {
+    modalBerkas.addEventListener('show.bs.modal', function (event) {
+      const idDrive = event.relatedTarget.getAttribute('data-id');
+      const title = modalBerkas.querySelector('#titleBerkas');
+      const iframe = modalBerkas.querySelector('#modalFrame');
+      
+      if (idDrive && title && iframe) {
+        title.textContent = event.relatedTarget.getAttribute('data-txt');
+        iframe.src = `https://drive.google.com/file/d/${idDrive}/preview`;
+      }
+    });
+    modalBerkas.addEventListener('hidden.bs.modal', function () {
+      const title = modalBerkas.querySelector('#titleBerkas');
+      const iframe = modalBerkas.querySelector('#modalFrame');
+      if (title && iframe) {
+        title.textContent = 'Pratinjau';
+        iframe.src = '';
+      }
+    });
+  }
+});
