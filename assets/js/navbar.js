@@ -1,5 +1,13 @@
 (function () {
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+
+  const sesiAdmin = JSON.parse(sessionStorage.getItem("admin_harmoni"));
+  const isLoggedIn = true; // Boolean(sesiAdmin && sesiAdmin.username);
+  const menuAdmin = isLoggedIn ? 
+    `<li class="nav-item">
+      <a class="nav-link ${currentPage === 'admin.html' ? 'nav-link-menu text-white' : ''}" href="admin.html">Admin</a>
+    </li>` : '';
+  
   const navHTML = `
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark shadow p-0 mb-3">
       <div class="container-fluid px-4">
@@ -23,6 +31,7 @@
             <li class="nav-item">
               <a class="nav-link ${currentPage === 'jimpitan.html' ? 'nav-link-menu text-white' : ''} " href="jimpitan.html">Jimpitan</a>
             </li>
+            ${menuAdmin}
           </ul>
         </div>
       </div>
