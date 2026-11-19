@@ -5,7 +5,7 @@
   const isLoggedIn = Boolean(sesiAdmin && sesiAdmin.username);
   const menuAdmin = isLoggedIn ? 
     `<li class="nav-item">
-      <a class="nav-link ${currentPage === 'settings.html' ? 'nav-link-menu text-white' : ''} " href="settings.html">Settings</a>
+      <a class="nav-link px-2 ${currentPage === 'settings.html' ? 'nav-link-menu text-white' : ''} " href="settings.html">Settings</a>
     </li>` : '';
   
   const navHTML = `
@@ -21,15 +21,15 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto gap-2">
+          <ul class="navbar-nav ms-auto gap-2 pb-2 pb-md-0">
             <li class="nav-item">
-              <a class="nav-link ${currentPage === 'index.html' ? 'nav-link-menu text-white' : ''} " href="index.html">Rekap</a>
+              <a class="nav-link px-2 ${currentPage === 'index.html' ? 'nav-link-menu text-white' : ''} " href="index.html">Rekap</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ${currentPage === 'transaksi.html' ? 'nav-link-menu text-white' : ''} " href="transaksi.html">Transaksi</a>
+              <a class="nav-link px-2 ${currentPage === 'transaksi.html' ? 'nav-link-menu text-white' : ''} " href="transaksi.html">Transaksi</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ${currentPage === 'jimpitan.html' ? 'nav-link-menu text-white' : ''} " href="jimpitan.html">Jimpitan</a>
+              <a class="nav-link px-2 ${currentPage === 'jimpitan.html' ? 'nav-link-menu text-white' : ''} " href="jimpitan.html">Jimpitan</a>
             </li>
             ${menuAdmin}
           </ul>
