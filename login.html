@@ -16,20 +16,27 @@
     </style>
   </head>
   <body class="d-flex align-items-center py-4 bg-body-tertiary">
-    <main id="konten-utama" class="form-signin w-100 m-auto">
-      <form>
-        <img class="mb-4" src="assets/images/dompet-bgwhite.png" alt="" height="57">
-        <h1 class="h3 mb-3 fw-normal">Login | Kas Harmoni</h1>
-        <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input type="text" class="form-control" id="username">
+    <main class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+      <div class="card border-0 shadow-sm p-4" style="width: 100%; max-width: 380px;">
+        <div class="d-flex align-items-center justify-content-center gap-3 pb-3 mb-3 border-bottom">
+          <img src="assets/images/dompet-bgwhite.png" alt="Logo Kas Harmoni" width="72" class="rounded">
+          <div class="lh-sm">
+            <h5 class="fw-bold m-0 text-dark">Kas Harmoni</h5>
+            <span class="text-muted small">Login Pengurus</span>
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password">
-        </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-      </form>
+        <form id="formLogin">
+          <div class="mb-3">
+            <label for="inputUser" class="form-label small fw-semibold text-secondary">Username</label>
+            <input type="text" id="inputUser" class="form-control" placeholder="Masukkan username" required>
+          </div>
+          <div class="mb-4">
+            <label for="inputPass" class="form-label small fw-semibold text-secondary">Password</label>
+            <input type="password" id="inputPass" class="form-control" placeholder="Masukkan password" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 fw-semibold py-2">Login</button>
+        </form>
+      </div>
     </main>
   </body>
 </html>
