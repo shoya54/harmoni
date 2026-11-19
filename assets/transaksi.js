@@ -1,4 +1,24 @@
-function prosesDataPemasukan_(pemasukan,targetKategori) {
+const tblConfig = {
+  data:[], layout:'fitColumns', movableColumns:false, columnDefaults:{resizable:false}, locale:'en', pagination:'local', paginationSize:10
+}
+const kolomAwal = [
+  {title:'Tanggal', field:'tanggal', width:80, headerSort:false, frozen:true, hozAlign:'center'},
+  {
+    title:'Keterangan', field:'keterangan', headerSort:false, minWidth:200, maxWidth:800, widthGrow:1, resizable:true,
+    formatter: function(cell) {
+      const rowData = cell.getRow().getData();
+      const ikon = rowData.url !== '-' ? 
+      `<i class="bi bi-paperclip text-success ms-2" style="font-size:1rem;" title="Lihat Berkas" data-bs-toggle="modal" data-bs-target="#modalBerkas" data-id="${rowData.url}" data-txt="${rowData.keterangan}"></i>` 
+      : '';
+      return `<span>${rowData.keterangan}</span> ${ikon}`;
+    }
+  }
+];
+const kolomAkhir = [
+  {title:'Kas', field:'kategori', headerSort:false, width:100}
+];
+
+function prosesDataPemasukan(pemasukan,targetKategori) {
   const listHasil = [];
   if (!pemasukan || pemasukan.length === 0) return listHasil;
   const rows = pemasukan.length;
@@ -46,7 +66,7 @@ function prosesDataPemasukan_(pemasukan,targetKategori) {
   return listHasil;
 }
 
-function prosesDataPengeluaran_(pengeluaran,targetKategori) {
+function prosesDataPengeluaran(pengeluaran,targetKategori) {
   const listHasil = [];
   if (!pengeluaran || pengeluaran.length <= 1) return listHasil;
   const rows = pengeluaran.length;
