@@ -137,7 +137,12 @@
         allowOutsideClick:false, allowEscapeKey:false, focusConfirm:false, showConfirmButton:false,
         didOpen:()=>{Swal.showLoading()}
       });
-      fetch(`${gasUrl}?action=rekap`).then(res => res.json()).then(res => {
+      fetch(`${gasUrl}?action=rekap`).then(res => {
+        if (!res.ok) {
+          throw new Error(`Error ${res.status}: ${res.statusText}`);
+        }
+        return res.json();
+      }).then(res => {
         if (res.status === 'success') {
           const dataRender = prosesRekap(res.data);
           renderRekap(dataRender);
