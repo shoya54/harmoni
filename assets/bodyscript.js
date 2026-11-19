@@ -87,14 +87,14 @@ function prosesTransaksi(dt) {
     }
   }
 
-  prosesDataPemasukan_(pemasukan,targetKategori).forEach(item => {
+  prosesDataPemasukan(pemasukan,targetKategori).forEach(item => {
     if (new Date(item.payload.tanggal) > meetDate) {
       Laporan.Pemasukan.push({kategori:item.kategori, ...item.payload});
     } else {
       Kas[item.status][item.kategori].push(item.payload);
     }
   });
-  prosesDataPengeluaran_(pengeluaran,targetKategori).forEach(item => {
+  prosesDataPengeluaran(pengeluaran,targetKategori).forEach(item => {
     if (new Date(item.payload.tanggal) > meetDate) Laporan.Pengeluaran.push({kategori:item.kategori, ...item.payload});
     else Kas[item.status][item.kategori].push(item.payload);
   });
