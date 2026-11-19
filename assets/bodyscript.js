@@ -1,9 +1,10 @@
 function prosesRekap(dt) {
-  const cardKas = dt.saldoval.slice(1)
+  const saldoval = dt.valueRanges[0].values;
+  const cardKas = saldoval.slice(1)
   .filter(v => parseInt(v[3]) > 0)
   .map((row) => {
     let obj = {};
-    dt.saldoval[0].forEach(function(h,i) {
+    saldoval[0].forEach(function(h,i) {
       let cellValue = row[i];
       if (cellValue === null || cellValue === undefined) {obj[h] = ''}
       else {obj[h] = String(cellValue)}
@@ -29,11 +30,12 @@ function prosesRekap(dt) {
     return 0;
   });
 
+  const tblval = dt.valueRanges[1].values;
   const tblIuran = {headers:[], data:[]};
-  if (!dt.tblval || dt.tblval.length <= 2) return { headers: [], data: [] };
-  const mainHeaders = dt.tblval[0];
-  const subHeaders = dt.tblval[1];
-  const rows = dt.tblval.slice(2);
+  if (!tblval || tblval.length <= 2) return { headers: [], data: [] };
+  const mainHeaders = tblval[0];
+  const subHeaders = tblval[1];
+  const rows = tblval.slice(2);
   let headerStructure = [];
   let lastMainTitle = '';
   let maxColumns = Math.max(mainHeaders.length, subHeaders.length);
