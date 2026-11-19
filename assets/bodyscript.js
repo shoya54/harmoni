@@ -137,3 +137,28 @@ function prosesTransaksi(dt) {
 
   return {Laporan, Histori:Kas};
 }
+
+function prosesJimpitan(dt) {
+  try {
+    const Val = dt.valueRanges[0].values;
+    const headers = Val[0].filter(nama => nama !== 'Total Harian');
+    const rows = Val.slice(1);
+    let hariIni = new Date();
+    hariIni.setHours(0,0,0,0);
+    const data = rows.filter(function(row) {
+      const kosong = row.slice(1).filter(item => String(item).trim() === '').length;
+      return kosong < 1;
+    }).map(function(row) {
+      let obj = {};
+      headers.forEach(function(h,i) {
+        let cellValue = row[i];
+        if (cellValue === null || cellValue === undefined) {obj[h] = ""}
+        else {obj[h] = String(cellValue)}
+      });
+      return obj;
+    });
+    return {headers, data, message:'', embed:dt.valueRanges[1].values.flat()};
+  } catch (err) {
+    return {message:err.message};
+  }
+}
