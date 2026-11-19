@@ -87,12 +87,119 @@
         <span class="text-body-secondary">Perum Harmoni @Gondangsari, Tegalrejo Salatiga</span>
       </div>  
     </footer>
-    
+
+    <script src="assets/transaksi.js"></script>
     <script src="assets/bodyscript.js"></script>
   	<script>
+      allTbl.tblLapIn = new Tabulator('#tbl-lapin', {
+        ...tblConfig, columns: [...kolomAwal, {
+          title:'Nominal', field:'debet', headerSort:false, width:100, hozAlign:'right', topCalc:'sum',
+          formatter:(cell) => formatRupiah(cell.getValue()),
+          topCalcFormatter:(cell) => formatRupiah(cell.getValue())
+        }, ...kolomAkhir]
+      });
+      
+      allTbl.tblLapOut = new Tabulator('#tbl-lapout', {
+        ...tblConfig, columns: [...kolomAwal, {
+          title:'Nominal', field:'kredit', headerSort:false, width:100, hozAlign:'right', topCalc:'sum',
+          formatter:(cell) => formatRupiah(cell.getValue()),
+          topCalcFormatter:(cell) => formatRupiah(cell.getValue())
+        }, ...kolomAkhir]
+      });
+      
       function renderTransaksi(res) {
-        //
+        document.getElementById('meetDate').textContent = res.Laporan.Meet;
+        allTbl.tblLapIn.setData(res.Laporan.Pemasukan).then(function() {
+          document.getElementById('saldoPemasukan').innerHTML = formatRupiah(allTbl.tblLapIn.getCalcResults().top.debet);
+        });
+        allTbl.tblLapOut.setData(res.Laporan.Pengeluaran).then(function() {
+          document.getElementById('saldoPengeluaran').innerHTML = formatRupiah(allTbl.tblLapOut.getCalcResults().top.kredit);
+        });
+      
+        for (const status in res.Histori) {
+          const statusContainer = document.getElementById(`trans-${status}`);
+          if (!statusContainer) continue;
+      
+          let arrKategori = Object.keys(res.Histori[status]);
+          if (status === 'aktif') {
+            arrKategori.sort((a,b) => {
+              if (a === 'Bulanan') return -1;
+              if (b === 'Bulanan') return 1;
+              if (a === 'Jimpitan') return -1;
+              if (b === 'Jimpitan') return 1;
+              return 0;
+            });
+          } else { arrKategori.sort() }
+      
+          const fragment = document.createDocumentFragment();
+          const tabulatorTasks = [];
+          arrKategori.forEach((kat,idx) => {
+            const idSaldo = `saldo${kat.replace(/[^a-zA-Z0-9]/g, '')}`;
+            const idTable = `tbl${idx + kat.replace(/[^a-zA-Z0-9]/g, '')}`;
+            const container = document.createElement('div');
+            container.className = 'col';
+            container.innerHTML = `
+            <div class="card h-100">
+              <div class="card-header">
+                <h5 class="d-flex align-items-center justify-content-between flex-wrap m-0">
+                  <div class="d-flex align-items-center"><i class="bi bi-tag-fill text-warning"></i>&nbsp;${kat === 'Tabungan Kegiatan' ? 'Tab. Kegiatan' : kat}</div>
+                  <span id="${idSaldo}" class="badge text-light border shadow-sm fs-6 mt-1 mt-sm-0">0</span>
+                </h5>
+              </div>
+              <div class="card-body p-0">
+                <div class="form-switch d-flex align-items-center gap-2 m-2" style="font-size:.75rem;">
+                  <input class="form-check-input toggle-calcs mt-0" type="checkbox" role="switch" id="switch${idTable}">
+                  <label class="form-check-label" for="switch${idTable}">Tampilkan total</label>
+                </div>
+                <div id="${idTable}"></div>
+              </div>
+            </div>`;
+            fragment.append(container);
+            tabulatorTasks.push({kat,idTable,idSaldo});
+          });
+          statusContainer.append(fragment);
+      
+          tabulatorTasks.forEach(task => {
+            allTbl[task.idTable] = new Tabulator(`#${task.idTable}`, {
+              data:res.Histori[status][task.kat], layout:'fitColumns',
+              locale:'en', pagination:'local', paginationSize:10,
+              movableColumns:false, columnDefaults:{resizable:false},
+              initialSort:[{column:'id', dir:'desc'}],
+              columns:[
+                {title:'No', field:'id', sorter:'number', visible:false},
+                {title:'Tanggal', field:'tanggal', width:80, headerSort:false, frozen:true, hozAlign:'center'},
+                {
+                  title:'Keterangan', field:'keterangan', headerSort:false, minWidth:250, maxWidth:800, widthGrow:1, resizable:true,
+                  formatter: function(cell) {
+                    const rowData = cell.getRow().getData();
+                    const ikon = rowData.url !== '-' ? 
+                    `<i class="bi bi-paperclip text-success ms-2" style="font-size:1rem;" title="Lihat Berkas" data-bs-toggle="modal" data-bs-target="#modalBerkas" data-id="${rowData.url}" data-txt="${rowData.keterangan}"></i>` 
+                    : '';
+                    return `<span>${rowData.keterangan}</span> ${ikon}`;
+                  }
+                },
+                {title:'Debet', field:'debet', headerSort:false, width:100, topCalc:'sum', hozAlign:'right',
+                topCalcFormatter:(cell) => formatRupiah(cell.getValue()),
+                formatter:(cell) => (cell.getValue() && cell.getValue() !== '-') ? `<span class="text-success">${formatRupiah(cell.getValue())}</span>` : '-'
+                },
+                {title:'Kredit', field:'kredit', headerSort:false, width:100, topCalc:'sum', hozAlign:'right',
+                topCalcFormatter:(cell) => formatRupiah(cell.getValue()),
+                formatter:(cell) => (cell.getValue() && cell.getValue() !== '-') ? `<span class="text-danger">${formatRupiah(cell.getValue())}</span>` : '-'
+                }
+              ]
+            });
+            allTbl[task.idTable].on('tableBuilt', function() {
+              const calc = this.getCalcResults();
+              const debet = (calc.top && calc.top.debet) ? Number(calc.top.debet) : 0;
+              const kredit = (calc.top && calc.top.kredit) ? Number(calc.top.kredit) : 0;
+              const saldo = debet - kredit;
+              const elSaldo = document.getElementById(task.idSaldo);
+              if (elSaldo) elSaldo.innerHTML = `<span class="fw-semibold">${formatRupiah(saldo)}</span>`;
+            });
+          });
+        }
       }
+      
       Swal.fire({
         html:`<div class="mt-2 text-muted">Memuat <strong>Transaksi</strong>, mohon tunggu.</div>`,
         allowOutsideClick:false, allowEscapeKey:false, focusConfirm:false, showConfirmButton:false,
