@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <base href="/harmoni/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jimpitan | Kas Harmoni</title>
+    <link rel="icon" type="image/png" href="dompet.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.25/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.5.0/dist/css/tabulator.min.css" rel="stylesheet">
+    <link href="assets/style.css" rel="stylesheet">
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.5.0/dist/js/tabulator.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ua-parser-js@2.0.10/dist/ua-parser.pack.min.js"></script>
+    <script src="assets/headscript.js"></script>
+  </head>
+  <body>
+    <!-- Modal Bootstrap untuk Google Drive -->
+    <div class="modal fade" id="modalBerkas" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="titleBerkas">Pratinjau</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-0" style="height: 75vh;"> <!-- Mengurangi padding agar iframe penuh -->
+            <!-- iframe ini yang akan memuat dokumen Google Drive -->
+            <iframe id="modalFrame" src="" width="100%" height="100%" style="border: none;"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="assets/navbar.js"></script>
+    
+    <main id="konten-utama" class="container-fluid px-4" style="margin-top: 4.5rem;">
+    </main>
+  
+    <footer class="footer mt-auto py-3 bg-body-tertiary">
+      <div class="container text-center">
+        <span class="text-body-secondary">Perum Harmoni @Gondangsari, Tegalrejo Salatiga</span>
+      </div>
+    </footer>
+
+    <script src="assets/jimpitan.js"></script>
+    <script src="assets/bodyscript.js"></script>
+  	<script>
+      // allTbl.tblLapIn = new Tabulator
+      
+      function renderJimpitan(res) {}
+      
+      Swal.fire({
+        html:`<div class="mt-2 text-muted">Memuat <strong>Jimpitan</strong>, mohon tunggu.</div>`,
+        allowOutsideClick:false, allowEscapeKey:false, focusConfirm:false, showConfirmButton:false,
+        didOpen:()=>{Swal.showLoading()}
+      });
+      fetch(`${gasUrl}?action=jimpitan`).then(res => {
+        if (!res.ok) {
+          throw new Error(`Error ${res.status}: ${res.statusText}`);
+        }
+        return res.json();
+      }).then(res => {
+        if (res.status === 'success') {
+          const dataRender = prosesJimpitan(res.data);
+          renderJimpitan(dataRender);
+          Swal.close();
+        } else {Swal.fire({icon:'warning', title:res.status, text:res.message})}
+      }).catch(err => {
+  			Swal.fire({icon:'error', title:'Gagal Memuat Data', text:err.message});
+  		});
+    </script>
+  </body>
+</html>
