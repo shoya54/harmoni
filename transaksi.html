@@ -90,7 +90,7 @@
     
     <script src="assets/bodyscript.js"></script>
   	<script>
-      function renderTransaksi(dt) {
+      function renderTransaksi(res) {
         //
       }
       Swal.fire({
@@ -105,7 +105,7 @@
         return res.json();
       }).then(res => {
         if (res.status === 'success') {
-          const dataRender = prosesRekap(res.data);
+          const dataRender = prosesTransaksi(res.data);
           renderTransaksi(dataRender);
           Swal.close();
         } else {Swal.fire({icon:'warning', title:res.status, text:res.message})}
