@@ -2,7 +2,7 @@
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
   const sesiAdmin = JSON.parse(sessionStorage.getItem('admin'));
-  const isLoggedIn = true; // Boolean(sesiAdmin && sesiAdmin.username);
+  const isLoggedIn = Boolean(sesiAdmin && sesiAdmin.username);
   const menuAdmin = isLoggedIn ? 
     `<li class="nav-item">
       <a class="nav-link ${currentPage === 'settings.html' ? 'nav-link-menu text-white' : ''} " href="settings.html">Settings</a>
