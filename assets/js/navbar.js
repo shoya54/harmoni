@@ -1,11 +1,11 @@
 (function () {
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
-  const sesiAdmin = JSON.parse(sessionStorage.getItem("admin_harmoni"));
+  const sesiAdmin = JSON.parse(sessionStorage.getItem('admin'));
   const isLoggedIn = true; // Boolean(sesiAdmin && sesiAdmin.username);
   const menuAdmin = isLoggedIn ? 
     `<li class="nav-item">
-      <a class="nav-link ${currentPage === 'admin.html' ? 'nav-link-menu text-white' : ''} " href="admin.html">Jimpitan</a>
+      <a class="nav-link ${currentPage === 'settings.html' ? 'nav-link-menu text-white' : ''} " href="settings.html">Jimpitan</a>
     </li>` : '';
   
   const navHTML = `
