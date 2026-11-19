@@ -71,3 +71,69 @@ function prosesRekap(dt) {
 
   return {cardKas, tblIuran};
 }
+
+function prosesTransaksi(dt) {
+  const Kas = structuredClone(MasterKas);
+  const Laporan = {Meet:'', Pemasukan:[], Pengeluaran:[]};
+  const pemasukan = dt.valueRanges[0].values;
+  const pengeluaran = dt.valueRanges[1].values;
+  const meetDate = new Date(dt.valueRanges[2].values.toString());
+  Laporan.Meet = meetDate.toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+
+  const targetKategori = {};
+  for (const status in Kas) {
+    for (const kategori in Kas[status]) {
+      targetKategori[kategori.trim().toLowerCase()] = {status, asli: kategori};
+    }
+  }
+
+  prosesDataPemasukan_(pemasukan,targetKategori).forEach(item => {
+    if (new Date(item.payload.tanggal) > meetDate) {
+      Laporan.Pemasukan.push({kategori:item.kategori, ...item.payload});
+    } else {
+      Kas[item.status][item.kategori].push(item.payload);
+    }
+  });
+  prosesDataPengeluaran_(pengeluaran,targetKategori).forEach(item => {
+    if (new Date(item.payload.tanggal) > meetDate) Laporan.Pengeluaran.push({kategori:item.kategori, ...item.payload});
+    else Kas[item.status][item.kategori].push(item.payload);
+  });
+
+  ['Pemasukan','Pengeluaran'].forEach(jenis => {
+    if (Laporan[jenis]) {
+      Laporan[jenis].sort((a,b) => {
+        return new Date(b.tanggal) - new Date(a.tanggal);
+      });
+    }
+  });
+
+  // sortir by tanggal dan assign id
+  for (const status in Kas) {
+    for (const kategori in Kas[status]) {
+      const listTransaksi = Kas[status][kategori];
+      if (listTransaksi.length > 0) {
+        // Menyatukan & mengurutkan Pemasukan + Pengeluaran
+        listTransaksi.sort((a, b) => {
+          const tanggalA = new Date(a.tanggal);
+          const tanggalB = new Date(b.tanggal);
+          
+          // Jika tanggal berbeda, urutkan berdasarkan tanggal terlama ke terbaru
+          if (tanggalA - tanggalB !== 0) return tanggalA - tanggalB;
+          
+          // JIKA TANGGAL SAMA: Dahulukan Pemasukan (yang debetnya bukan '-')
+          const apakahAMasuk = a.debet !== '-';
+          const apakahBMasuk = b.debet !== '-';
+          if (apakahAMasuk && !apakahBMasuk) return -1; // 'a' (pemasukan) naik ke atas
+          if (!apakahAMasuk && apakahBMasuk) return 1;  // 'b' (pemasukan) naik ke atas
+          
+          return 0;
+        });
+
+        // Buat ID baru yang runtut dari 1 untuk Tabulator
+        listTransaksi.forEach((item, index) => {item.id = index + 1});
+      }
+    }
+  }
+
+  return {Laporan, Histori:Kas};
+}
